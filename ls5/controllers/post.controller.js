@@ -1,65 +1,70 @@
-// const createPost = async (req, res) => {
-//     // validate email
-//     const {
-//         email,
-//         name,
-//         password
-//     } = req.body;
-//     //
-//     try {
-//         if (!password)
-//             throw {
-//                 statusCode: 400,
-//                 message: "Missing password",
-//             };
-//         // validate email
+import { PostModel } from '../models/Post.js';
 
-//         const newUser = new User(req.body);
-//         const savedUser = await newUser.save();
+// CRUD POST
 
-//         res.json(savedUser);
-//     } catch (err) {
-//         res
-//             .status(err.statusCode || 500)
-//             .send(err.message || "Internal Server Error");
-//     }
-// }
+// Create
+
+const createPost = async(req, res) => {
+    const post = new PostModel({
+        title: req.body.title,
+        content: req.body.content,
+    })
+    try {
+        const savedPost = await post.save();
+        res.json(savedPost);
+    } catch (error) {
+        res.json({ message: error });
+    }
+}
+
+// Read
+
+const getPosts = async(req, res) => {
+    try {
+        const posts = await PostModel.find();
+        res.json(posts);
+    } catch (error) {
+        res.json({ message: error });
+    }
+}
+
+const getPost = async(req, res) => {
+    try {
+        const post = await PostModel.findById(req.params.postId);
+        res.json(post);
+    } catch (error) {
+        res.json({ message: error });
+    }
+}
+
+// Delete
+
+const deletePost = async(req, res) => {
+
+    try {
+        const removedPost = await PostModel.remove({ _id: req.params.postId });
+        res.json(removedPost);
+    } catch (error) {
+        res.json({ message: error });
+    }
+}
+
+// Update
 
 
-//   app.get("/posts", async (req, res) => {
-//     // find({}) = findAll
-
-//     const posts = await Post.find({
-//       title: {
-//         $sort: 1,
-//       },
-//     });
-//     res.json(posts);
-//   });
-
-//   app.post("/posts", async (req, res) => {
-//     const newPost = new Post(req.body);
-//     newPost.updateOne({
-//       $set: { title: "New Title" },
-//     });
-//     const savedPost = await newPost.save();
-//     res.json(savedPost);
-//   });
-
-// /posts/:id 
-// method PUT
-
-// put, delete, findById
-// business
-
-// -> req.params.id
-// -> find({id:{$eq:req.params.id}})
 const updatePost = async(req, res) => {
-return res.status(200).send({
-    message: "Update Post"
-})
+    try {
+        const updatedPost = await PostModel.updateOne({ _id: req.params.postId }, { $set: { title: req.body.title, content: req.body.content } });
+        res.json(updatedPost);
+    } catch (error) {
+        res.json({ message: error });
+    }
 }
 
 export {
+    createPost,
+    getPosts,
+    getPost,
+    deletePost,
     updatePost
 }

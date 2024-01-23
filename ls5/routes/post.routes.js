@@ -1,5 +1,5 @@
 import express from "express";
-import { updatePost } from "../controllers/post.controller.js";
+import { createPost, deletePost, getPost, getPosts, updatePost } from "../controllers/post.controller.js";
 import { isValidPostId } from "../middlewares/post.middleware.js";
 
 // /
@@ -12,19 +12,27 @@ const postRouter = express.Router();
  * @methods GET, PUT, POST, DELETE
  */
 
-postRouter.route("/").get().put().post().delete();
+postRouter.route("/")
+    .get(
+        getPosts
+    )
+    .post(
+        createPost
+    )
 
 /**
  * @route GET /posts/:Id
  * @methods GET, PUT, POST, DELETE
  */
-
 postRouter
-  .route("/:id")
-  .all(isValidPostId)
-  .get()
-  .put(updatePost)
-  .post()
-  .delete();
+    .route("/:id")
+    .all(isValidPostId)
+    .get(getPost)
+    .put(
+        updatePost
+    )
+    .delete(
+        deletePost
+    )
 
 export { postRouter };
