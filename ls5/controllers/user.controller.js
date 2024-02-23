@@ -2,19 +2,39 @@
 
 import { UserModel } from "../models/User.js";
 
+
+// register -> POST /register (body:{username, password}) -> !username(isExist) -> password(hash) -> save -> res(201)
+// login -> POST /login (body:{username, password}) -> username(isExist) -> password(compare) -> res(200,access_token)
+
+// CRUD /:endpoint (header:{Authorization: Bearer access_token})
+
+
+
 // Create
 
 const createUser = async(req, res) => {
-    const user = new UserModel({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
+    const { email, password, username } = req.body;
+    const isExist = await UserModel.count({
+        username
     })
+
+    if (isExist) return res.status(400).send({ message: "Username is exist" })
+
+
     try {
+        // const salt = await bcrypt.genSalt(10);
+        // const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        const user = new UserModel({
+            name: req.body.name,
+            username,
+            email: req.body.email,
+            password: password,
+        })
+
         const savedUser = await user.save();
-        res.json(savedUser);
+        return res.json(savedUser);
     } catch (error) {
-        res.json({ message: error });
+        return res.json({ message: error });
     }
 }
 

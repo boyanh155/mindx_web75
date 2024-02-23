@@ -19,11 +19,10 @@ postRouter.route("/")
     .post(
         createPost
     )
-
-/**
- * @route GET /posts/:Id
- * @methods GET, PUT, POST, DELETE
- */
+    /**
+     * @route GET /posts/:Id
+     * @methods GET, PUT, POST, DELETE
+     */
 postRouter
     .route("/:id")
     .all(isValidPostId)

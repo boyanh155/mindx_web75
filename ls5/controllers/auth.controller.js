@@ -1,36 +1,36 @@
 import { UserModel } from "../models/User.js";
 
 const login = async(req, res) => {
-    // try {
-    //     const user = await UserModel.findOne({
-    //         email: req.body.email,
-    //     });
-    //     if (!user) throw { status: 404, message: "User not found" };
+    try {
+        const user = await UserModel.findOne({
+            email: req.body.email,
+        });
+        if (!user) throw { status: 404, message: "User not found" };
 
 
-    //     // pwd + salt -> hashedPwd
-    //     const isMatch = await bcrypt.compare(req.body.password, user.password);
-    //     if (!isMatch) throw { status: 400, message: "Invalid credentials" };
+        // pwd + salt -> hashedPwd
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        if (!isMatch) throw { status: 400, message: "Invalid credentials" };
 
-    //     // 
-    //     const token = jwt.sign({
-    //             userId: user._id,
-    //         },
-    //         process.env.JWT_SECRET, { expiresIn: "1h" }
-    //     );
+        // 
+        const token = jwt.sign({
+                userId: user._id,
+            },
+            process.env.JWT_SECRET, { expiresIn: "1h" }
+        );
 
-    //     return res.status(200).send({
-    //         message: "Login successful",
-    //         success: true,
-    //         data: token,
-    //     });
-    // } catch (err) {
-    //     return res.status(500).send({
-    //         message: err,
-    //         success: false,
-    //     });
-    // }
-    return res.status(200).send("Login successful");
+        return res.status(200).send({
+            message: "Login successful",
+            success: true,
+            data: token,
+        });
+    } catch (err) {
+        return res.status(500).send({
+            message: err,
+            success: false,
+        });
+    }
+    // return res.status(200).send("Login successful");
 }
 
 const register = async(req, res) => {

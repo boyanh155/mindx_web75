@@ -21,7 +21,6 @@ const routes = [
 ]
 
 const routesFn = (app) => {
-
     routes.forEach((route) => {
         if (route.path === "/auth") {
             app.use(route.path, route.router);
